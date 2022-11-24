@@ -1,0 +1,117 @@
+create table college_management(
+    clg_code int(4) primary key,
+    clg_name varchar(40),
+    clg_address varchar(40),
+    phone_no int(10));
+
+create table college_department(
+    clg_code int(4),
+   dept_id char(3) primary key,
+    dept_name varchar(30),
+    foreign key(clg_code) references college_management(clg_code));
+
+create table course(
+   dept_id char(3),
+   course_id varchar(7),
+    course_name varchar(30),
+    credits int(3),
+   primary key(course_id),
+   constraint FK_deptId foreign key(dept_id) references college_department(dept_id)
+    on delete cascade);
+
+create table student_info(
+    Reg_no char(6) primary key,
+   first_name varchar(15),
+    last_name varchar(15),
+    DOB date,
+   city varchar(7),
+   email varchar(30),
+    dept_id char(3),
+    constraint FK_deptId_1 foreign key(dept_id) references college_department(dept_id)
+    on delete set null);
+
+ INSERT INTO COLLEGE_MANAGEMENT VALUES(5214,'THIAGARAJAR COLLEGE OF ENGINEERING','THIRUPARANKUNDRAM',0457712345);
+
+ INSERT INTO COLLEGE_DEPARTMENT VALUES(5214,'CSE','COMPUTER SCIENCE ENGINEERING');
+ INSERT INTO COLLEGE_DEPARTMENT VALUES(5214,'ECE','ELECTRONICS ENGINEERING');
+INSERT INTO COLLEGE_DEPARTMENT VALUES(5214,'EEE','ELECTRICALS ENGINEERING');
+
+INSERT INTO COURSE VALUES('CSE','18CS410','DATABASE MANAGEMENT',3);
+INSERT INTO COURSE VALUES('CSE','18CS420','ARTIFICIAL INTELLIGENCE',3);
+ INSERT INTO COURSE VALUES('CSE','18CS470','TOOLS LAB',1);
+INSERT INTO COURSE VALUES('ECE','18EC410','DIGITAL CIRCUITS',1);
+ INSERT INTO COURSE VALUES('ECE','18EC420','TELECOMMUNICATION',3);
+INSERT INTO COURSE VALUES('EEE','18EE410','MICROCONTROLLERS',3);
+INSERT INTO COURSE VALUES('EEE','18EE470','MICROCONTROLLERS LAB',1);
+
+SELECT * FROM COURSE;
+DESCRIBE STUDENT_INFO;
+
+INSERT INTO STUDENT_INFO VALUES('19X001','ANU','V','2001-08-12','MADURAI','anu@gmail.com','CSE');
+INSERT INTO STUDENT_INFO VALUES('19Y002','ASHA','T','2000-08-25','CHENNAI','asha@gmail.com','ECE');
+INSERT INTO STUDENT_INFO VALUES('19Y001','GEETHA','R','2002-02-17','TRICHY','geetha@gmail.com','ECE');
+INSERT INTO STUDENT_INFO VALUES('19X002','BHAVANI','R','2002-03-25','CBE','bhavani@gmail.com','CSE');
+INSERT INTO STUDENT_INFO VALUES('19Z001','AKSHAY','B','2001-11-23','CBE','akshay@gmail.com','EEE');
+ INSERT INTO STUDENT_INFO VALUES('19Z002','BHUVANA','N','2001-8-23','MADURAI','bhuvana@gmail.com','EEE');
+***********************************************
+DATA INTEGRITY CONSTRAINTS:
+
+
+--REMOVING DEPARTMENT - 'EEE' FROM COLLEGE_DEPARTMENT TABLE
+DELETE FROM COLLEGE_DEPARTMENT WHERE DEPT_ID = 'EEE';
+
+
+ --IN COURSE TABLE, WE HAVE USED CONSTRAINT - ON DELETE CASCADE(SO ALL COURSES OFFERED BY 'EEE' DEPARTMENT WOULD BE REMOVED FROM TABLE
+SELECT * FROM COURSE;
+
+ --IN STUDENT_INFO, WE HAVE USED CONSTRAINT - ON DELETE SET NULL(SO DEPT_ID OF ALL STUDENTS FROM 'EEE' DEPARTMENT WOULD BE MARKED NULL
+SELECT * FROM STUDENT_INFO;
+************************************************
+GRANT AND REVOKE:
+
+1. create user 'team4'@'localhost' identified by 'team4';
+
+grant select on *.* to 'team4'@'localhost';
+
+show grants for 'team4'@'localhost';
+
+2. grant insert on tooltest.course to 'team4'@'localhost';
+
+grant update(credits) on tooltest.course to 'team4'@'localhost';
+
+show grants for 'team4'@'localhost';
+
+3.select user();
+
+4.system mysql -u team4 -p
+team4(password)
+
+5.use tooltest;
+ select user();
+
+6.insert into course values('CSE','18CS770','ENG TOOLS LAB',3);
+
+SELECT * FROM COURSE;
+
+UPDATE COURSE SET CREDITS=1 WHERE COURSE_ID ='18CS770';
+
+SELECT * FROM COURSE;
+
+UPDATE COURSE SET COURSE_NAME='TOOLS LAB' WHERE COURSE_ID='18CS770';
+
+7.system mysql -u r00t -p
+
+select user();
+
+revoke insert,update(credits) on tooltest.course from 'team4'@'localhost';
+
+show grants for 'team4'@'localhost';
+
+8.system mysql -u root -p
+select user();
+
+use tooltest;
+
+insert into course values('CSE','18CS440','IOT',3);
+
+update course set course_name = 'INTERNET OF THINGS'  where course_id = '18CS440';
